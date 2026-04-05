@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroVeda - Discover Your Cosmic Path</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cosmic: { 50:'#f5f0ff',100:'#ede5ff',200:'#dccfff',300:'#c3a8ff',400:'#a575ff',500:'#8b3dff',600:'#7c1fff',700:'#6d10eb',800:'#5b0fc5',900:'#4c109f',950:'#2d0070' },
+                        gold: { 300:'#fde68a',400:'#facc15',500:'#eab308',600:'#ca8a04' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #050510; color: #fff; overflow-x: hidden; }
+        .font-display { font-family: 'Playfair Display', serif; }
+        .font-elegant { font-family: 'Cormorant Garamond', serif; }
+
+        /* ===== CANVAS STARS ===== */
+        #star-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+        /* ===== ANIMATED NEBULA BLOBS ===== */
+        .nebula {
+            position: fixed; border-radius: 50%; filter: blur(120px); opacity: 0.35; pointer-events: none; z-index: 0;
+            animation: nebulaDrift 20s ease-in-out infinite alternate;
+        }
+        .nebula-1 { width: 600px; height: 600px; background: radial-gradient(circle, #7c3aed 0%, transparent 70%); top: -200px; left: -100px; }
+        .nebula-2 { width: 500px; height: 500px; background: radial-gradient(circle, #a855f7 0%, transparent 70%); bottom: -150px; right: -100px; animation-delay: -7s; }
+        .nebula-3 { width: 400px; height: 400px; background: radial-gradient(circle, #6366f1 0%, transparent 70%); top: 40%; left: 60%; animation-delay: -14s; }
+        @keyframes nebulaDrift {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -20px) scale(1.1); }
+            66% { transform: translate(-20px, 30px) scale(0.95); }
+            100% { transform: translate(10px, 10px) scale(1.05); }
+        }
+
+        /* ===== SHOOTING STARS ===== */
+        .shooting-star {
+            position: fixed; width: 100px; height: 1px; z-index: 1; pointer-events: none;
+            background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent);
+            animation: shoot 3s linear infinite;
+            opacity: 0;
+        }
+        .shooting-star:nth-child(1) { top: 15%; left: 10%; animation-delay: 1s; }
+        .shooting-star:nth-child(2) { top: 35%; left: 50%; animation-delay: 4s; animation-duration: 2.5s; }
+        .shooting-star:nth-child(3) { top: 60%; left: 30%; animation-delay: 7s; animation-duration: 3.5s; }
+        @keyframes shoot {
+            0% { transform: translateX(0) rotate(-35deg); opacity: 0; }
+            5% { opacity: 1; }
+            30% { opacity: 0.6; }
+            100% { transform: translateX(600px) rotate(-35deg); opacity: 0; }
+        }
+
+        /* ===== FLOATING ZODIAC RING ===== */
+        .zodiac-ring {
+            animation: spinSlow 60s linear infinite;
+        }
+        @keyframes spinSlow { to { transform: rotate(360deg); } }
+
+        .zodiac-symbol {
+            position: absolute; font-size: 1.5rem; opacity: 0.4;
+            animation: symbolPulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes symbolPulse {
+            0% { opacity: 0.2; transform: scale(0.9); }
+            100% { opacity: 0.5; transform: scale(1.1); }
+        }
+
+        /* ===== GLASSMORPHISM ===== */
+        .glass {
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .glass-strong {
+            background: rgba(255,255,255,0.07);
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+
+        /* ===== GRADIENT TEXT ===== */
+        .text-shimmer {
+            background: linear-gradient(90deg, #c084fc, #e879f9, #a78bfa, #c084fc);
+            background-size: 300% 100%;
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shimmer 4s ease-in-out infinite;
+        }
+        @keyframes shimmer { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+
+        .text-gold-shimmer {
+            background: linear-gradient(90deg, #fde68a, #fbbf24, #f59e0b, #fde68a);
+            background-size: 300% 100%;
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        /* ===== PAGE TRANSITIONS ===== */
+        .page { display: none; opacity: 0; transition: opacity 0.6s ease; }
+        .page.active { display: block; opacity: 1; }
+        .page.fade-out { opacity: 0; }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes scaleIn { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
+        @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+        @keyframes glow { 0%,100%{box-shadow:0 0 20px rgba(139,61,255,0.3)} 50%{box-shadow:0 0 40px rgba(139,61,255,0.6)} }
+        @keyframes borderGlow {
+            0%,100% { border-color: rgba(139,61,255,0.3); }
+            50% { border-color: rgba(139,61,255,0.8); }
+        }
+        @keyframes confettiDrop {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        @keyframes ripple {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+        @keyframes countPulse {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .fade-up { animation: fadeUp 0.7s ease-out both; }
+        .fade-up-d1 { animation: fadeUp 0.7s 0.1s ease-out both; }
+        .fade-up-d2 { animation: fadeUp 0.7s 0.2s ease-out both; }
+        .fade-up-d3 { animation: fadeUp 0.7s 0.3s ease-out both; }
+        .fade-up-d4 { animation: fadeUp 0.7s 0.4s ease-out both; }
+        .scale-in { animation: scaleIn 0.5s ease-out both; }
+        .slide-up { animation: slideUp 0.5s ease-out both; }
+        .float { animation: float 4s ease-in-out infinite; }
+        .glow-pulse { animation: glow 2s ease-in-out infinite; }
+        .border-glow { animation: borderGlow 2s ease-in-out infinite; }
+
+        /* ===== QUIZ OPTION CARDS ===== */
+        .option-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden;
+        }
+        .option-card::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(139,61,255,0.1), transparent);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .option-card:hover::before { opacity: 1; }
+        .option-card:hover { transform: translateY(-3px) scale(1.01); border-color: rgba(139,61,255,0.4); }
+        .option-card.selected {
+            border-color: #a575ff !important;
+            background: linear-gradient(135deg, rgba(139,61,255,0.15), rgba(139,61,255,0.05)) !important;
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(139,61,255,0.2), inset 0 0 30px rgba(139,61,255,0.05);
+        }
+        .option-card.selected .option-circle {
+            background: linear-gradient(135deg, #8b3dff, #a855f7) !important;
+            border-color: transparent !important; color: #fff !important;
+            box-shadow: 0 0 15px rgba(139,61,255,0.5);
+        }
+
+        /* ===== PLAN CARDS ===== */
+        .plan-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+        .plan-card:hover { transform: translateY(-8px); }
+        .plan-popular {
+            background: linear-gradient(180deg, rgba(139,61,255,0.15) 0%, rgba(15,15,30,0.95) 100%);
+            border: 2px solid rgba(139,61,255,0.5);
+            animation: borderGlow 3s ease-in-out infinite;
+        }
+        .plan-popular:hover { transform: translateY(-8px) scale(1.02); }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-bar-inner {
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; overflow: hidden;
+        }
+        .progress-bar-inner::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: progressShine 2s ease-in-out infinite;
+        }
+        @keyframes progressShine { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+
+        /* ===== VIDEO CARDS ===== */
+        .video-card { transition: all 0.4s ease; }
+        .video-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(139,61,255,0.15);
+        }
+        .video-card:hover .play-btn {
+            transform: scale(1.15);
+            box-shadow: 0 0 30px rgba(255,255,255,0.3);
+        }
+        .video-card:hover .video-overlay { opacity: 0.4; }
+
+        /* ===== CTA BUTTON ===== */
+        .cta-btn {
+            position: relative; overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .cta-btn::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, rgba(255,255,255,0.1), transparent 30%);
+            animation: btnRotate 4s linear infinite;
+        }
+        @keyframes btnRotate { to { transform: rotate(360deg); } }
+        .cta-btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 10px 40px rgba(139,61,255,0.4); }
+
+        /* ===== TESTIMONIAL ===== */
+        .testimonial-card {
+            position: relative;
+        }
+        .testimonial-card::before {
+            content: '"'; position: absolute; top: -10px; left: 16px;
+            font-size: 4rem; font-family: 'Playfair Display', serif; color: rgba(139,61,255,0.3); line-height: 1;
+        }
+
+        /* ===== CUSTOM SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a1a; }
+        ::-webkit-scrollbar-thumb { background: #3b0d7a; border-radius: 3px; }
+
+        /* ===== CONFETTI ===== */
+        .confetti-piece {
+            position: fixed; width: 10px; height: 10px; z-index: 200; pointer-events: none;
+            animation: confettiDrop 3s ease-in forwards;
+        }
+
+        /* ===== RIPPLE ===== */
+        .ripple {
+            position: absolute; border-radius: 50%;
+            border: 2px solid rgba(139,61,255,0.4);
+            animation: ripple 1.5s ease-out infinite;
+        }
+
+        /* ===== COUNTER ===== */
+        .live-counter {
+            animation: countPulse 2s ease-in-out infinite;
+        }
+
+        /* mobile fix */
+        @media (max-width: 640px) {
+            .nebula { filter: blur(80px); opacity: 0.25; }
+        }
+
+        input:focus {
+            outline: none; border-color: #8b3dff;
+            box-shadow: 0 0 0 3px rgba(139,61,255,0.15), 0 0 20px rgba(139,61,255,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Particle Canvas -->
+<canvas id="star-canvas"></canvas>
+
+<!-- Nebula Blobs -->
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+
+
+<!-- ==================== PAGE 1: LANDING ==================== -->
+<div id="page-landing" class="page active" style="opacity:1">
+    <div class="relative z-10 min-h-screen flex flex-col">
+        <!-- Nav -->
+        <nav class="px-6 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cosmic-500 to-purple-600 flex items-center justify-center shadow-lg shadow-cosmic-600/30">
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                </div>
+                <span class="font-display text-xl font-bold tracking-tight">AstroVeda</span>
+            </div>
+            <div class="live-counter flex items-center gap-2 px-3 py-1.5 glass rounded-full text-xs">
+                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                <span class="text-gray-300"><span id="live-count">2,847</span> exploring now</span>
+            </div>
+        </nav>
+
+        <!-- Hero -->
+        <div class="flex-1 flex items-center justify-center px-4 pb-20">
+            <div class="max-w-2xl mx-auto text-center">
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 glass rounded-full mb-8 fade-up">
+                    <div class="flex -space-x-2">
+                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 border-2 border-gray-900"></div>
+                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-cyan-500 border-2 border-gray-900"></div>
+                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 border-2 border-gray-900"></div>
+                    </div>
+                    <span class="text-gray-300 text-sm">Trusted by <strong class="text-white">50,000+</strong> seekers</span>
+                    <span class="text-yellow-400">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                </div>
+
+                <!-- Heading -->
+                <h1 class="font-display text-5xl sm:text-6xl md:text-7xl font-black leading-[1.1] mb-6 fade-up-d1">
+                    Discover What The<br>
+                    <span class="text-shimmer">Stars Reveal</span><br>
+                    About You
+                </h1>
+
+                <p class="text-gray-400 text-lg sm:text-xl max-w-lg mx-auto mb-10 leading-relaxed fade-up-d2 font-elegant text-[1.3rem]">
+                    Take our 2-minute cosmic quiz and unlock deeply personalized insights about your life path, relationships & destiny.
+                </p>
+
+                <!-- Zodiac floating ring -->
+                <div class="relative w-48 h-48 mx-auto mb-10 fade-up-d2">
+                    <div class="zodiac-ring absolute inset-0">
+                        <span class="zodiac-symbol" style="top:0;left:50%;transform:translate(-50%,-50%)">&#9800;</span>
+                        <span class="zodiac-symbol" style="top:13%;right:6%" >&#9801;</span>
+                        <span class="zodiac-symbol" style="top:50%;right:-8%;transform:translateY(-50%)" >&#9802;</span>
+                        <span class="zodiac-symbol" style="bottom:13%;right:6%" >&#9803;</span>
+                        <span class="zodiac-symbol" style="bottom:0;left:50%;transform:translate(-50%,50%)" >&#9804;</span>
+                        <span class="zodiac-symbol" style="bottom:13%;left:6%" >&#9805;</span>
+                        <span class="zodiac-symbol" style="top:50%;left:-8%;transform:translateY(-50%)" >&#9806;</span>
+                        <span class="zodiac-symbol" style="top:13%;left:6%" >&#9807;</span>
+                    </div>
+                    <!-- Center orb -->
+                    <div class="absolute inset-8 rounded-full bg-gradient-to-br from-cosmic-600/40 to-purple-700/20 border border-cosmic-500/30 flex items-center justify-center glow-pulse">
+                        <span class="text-4xl float">&#10024;</span>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="fade-up-d3">
+                    <button onclick="navigateTo('page-quiz')" class="cta-btn inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-cosmic-600 via-purple-600 to-cosmic-600 rounded-2xl text-lg font-bold shadow-2xl shadow-cosmic-600/30">
+                        <span class="relative z-10">Begin Your Free Reading</span>
+                        <span class="relative z-10 text-2xl">&#10142;</span>
+                    </button>
+                    <p class="text-gray-600 text-sm mt-4 flex items-center justify-center gap-4">
+                        <span>&#9201; 2 minutes</span>
+                        <span>&#128274; Private & Free</span>
+                        <span>&#10024; AI-Powered</span>
+                    </p>
+                </div>
+
+                <!-- Testimonials -->
+                <div class="grid sm:grid-cols-3 gap-3 mt-16 fade-up-d4">
+                    <div class="testimonial-card glass rounded-2xl p-4 text-left">
+                        <p class="text-gray-300 text-sm leading-relaxed mb-3">This reading was scary accurate. It knew things about my career I hadn't told anyone.</p>
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-rose-500"></div>
+                            <div><div class="text-xs font-semibold">Priya M.</div><div class="text-[10px] text-gray-500">Mumbai</div></div>
+                            <span class="text-yellow-400 text-xs ml-auto">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                        </div>
+                    </div>
+                    <div class="testimonial-card glass rounded-2xl p-4 text-left">
+                        <p class="text-gray-300 text-sm leading-relaxed mb-3">The video lessons changed how I understand my relationships. Life-changing content.</p>
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-cyan-500"></div>
+                            <div><div class="text-xs font-semibold">Arjun K.</div><div class="text-[10px] text-gray-500">Bangalore</div></div>
+                            <span class="text-yellow-400 text-xs ml-auto">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                        </div>
+                    </div>
+                    <div class="testimonial-card glass rounded-2xl p-4 text-left">
+                        <p class="text-gray-300 text-sm leading-relaxed mb-3">Best &#8377;999 I ever spent. My palmistry reading was spot on. Highly recommend!</p>
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500"></div>
+                            <div><div class="text-xs font-semibold">Sneha R.</div><div class="text-[10px] text-gray-500">Delhi</div></div>
+                            <span class="text-yellow-400 text-xs ml-auto">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== PAGE 2: QUIZ ==================== -->
+<div id="page-quiz" class="page">
+    <div class="relative z-10 min-h-screen flex flex-col">
+        <nav class="px-6 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cosmic-500 to-purple-600 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                </div>
+                <span class="font-display text-xl font-bold">AstroVeda</span>
+            </div>
+            <button onclick="navigateTo('page-landing')" class="text-gray-500 hover:text-gray-300 text-sm">&#10005; Exit</button>
+        </nav>
+
+        <div class="flex-1 flex items-center justify-center px-4 pb-10">
+            <div class="w-full max-w-lg">
+                <!-- Progress -->
+                <div class="mb-10 fade-up">
+                    <div class="flex justify-between text-sm mb-3">
+                        <span class="text-gray-400">Question <span id="q-num" class="text-white font-semibold">1</span> of <span id="q-total">5</span></span>
+                        <span id="q-pct" class="text-cosmic-400 font-semibold">20%</span>
+                    </div>
+                    <div class="h-2.5 bg-gray-800/80 rounded-full overflow-hidden backdrop-blur">
+                        <div id="progress-bar" class="progress-bar-inner h-full bg-gradient-to-r from-cosmic-500 via-purple-500 to-pink-500 rounded-full" style="width:20%"></div>
+                    </div>
+                </div>
+
+                <!-- Question Area -->
+                <div id="quiz-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== PAGE 3: EMAIL CAPTURE ==================== -->
+<div id="page-email" class="page">
+    <div class="relative z-10 min-h-screen flex flex-col">
+        <div class="flex-1 flex items-center justify-center px-4 pt-10 pb-32">
+            <div class="w-full max-w-lg">
+                <!-- Analyzing animation -->
+                <div id="analyzing" class="text-center">
+                    <div class="relative w-32 h-32 mx-auto mb-8">
+                        <div class="absolute inset-0 rounded-full border-2 border-cosmic-500/30 border-t-cosmic-400 animate-spin"></div>
+                        <div class="absolute inset-3 rounded-full border-2 border-purple-500/30 border-b-purple-400 animate-spin" style="animation-direction:reverse;animation-duration:1.5s"></div>
+                        <div class="absolute inset-6 rounded-full border-2 border-pink-500/30 border-t-pink-400 animate-spin" style="animation-duration:2s"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-3xl">&#128302;</span>
+                        </div>
+                    </div>
+                    <h2 class="font-display text-2xl font-bold mb-2">Analyzing Your Cosmic Energy...</h2>
+                    <p class="text-gray-400" id="analyze-text">Mapping your birth chart alignment</p>
+                </div>
+
+                <!-- Results preview (shown after analysis) -->
+                <div id="results-preview" class="hidden">
+                    <div class="text-center mb-6 fade-up">
+                        <div class="text-5xl mb-3">&#10024;</div>
+                        <h2 class="font-display text-3xl font-bold mb-2">Your Reading is Ready</h2>
+                        <p class="text-gray-400">We've found powerful insights in your cosmic profile</p>
+                    </div>
+
+                    <!-- Blurred preview cards -->
+                    <div class="space-y-3 mb-6 fade-up-d1">
+                        <div class="glass rounded-2xl p-5">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center text-xl">&#128293;</div>
+                                <div><div class="font-semibold">Life Path Energy</div><div class="text-xs text-gray-400">Core personality analysis</div></div>
+                                <span class="ml-auto text-cosmic-400 font-bold text-lg">94%</span>
+                            </div>
+                            <div class="filter blur-[6px] select-none space-y-2">
+                                <p class="text-gray-300 text-sm">Your dominant fire energy indicates a natural leader with incredible drive and...</p>
+                                <div class="h-2 bg-gray-800 rounded-full"><div class="h-full w-[94%] bg-gradient-to-r from-orange-500 to-red-500 rounded-full"></div></div>
+                            </div>
+                        </div>
+                        <div class="glass rounded-2xl p-5">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-xl">&#128150;</div>
+                                <div><div class="font-semibold">Love & Compatibility</div><div class="text-xs text-gray-400">Relationship insights</div></div>
+                                <span class="ml-auto text-pink-400 font-bold text-lg">87%</span>
+                            </div>
+                            <div class="filter blur-[6px] select-none space-y-2">
+                                <p class="text-gray-300 text-sm">Earth signs create the strongest bonds with your energy. Look for stability in...</p>
+                                <div class="h-2 bg-gray-800 rounded-full"><div class="h-full w-[87%] bg-gradient-to-r from-pink-500 to-rose-500 rounded-full"></div></div>
+                            </div>
+                        </div>
+                        <div class="glass rounded-2xl p-5">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cosmic-500 to-blue-500 flex items-center justify-center text-xl">&#128188;</div>
+                                <div><div class="font-semibold">Career Destiny</div><div class="text-xs text-gray-400">Professional alignment</div></div>
+                                <span class="ml-auto text-blue-400 font-bold text-lg">91%</span>
+                            </div>
+                            <div class="filter blur-[6px] select-none space-y-2">
+                                <p class="text-gray-300 text-sm">Creative leadership roles align perfectly with your cosmic blueprint. The stars suggest...</p>
+                                <div class="h-2 bg-gray-800 rounded-full"><div class="h-full w-[91%] bg-gradient-to-r from-cosmic-500 to-blue-500 rounded-full"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Email Popup -->
+        <div id="email-popup" class="fixed bottom-0 left-0 right-0 z-50 hidden">
+            <div class="max-w-lg mx-auto px-4">
+                <div class="glass-strong rounded-t-3xl p-6 shadow-2xl shadow-cosmic-950/80 slide-up border-t border-cosmic-500/30">
+                    <div class="w-12 h-1.5 bg-gray-700 rounded-full mx-auto mb-5"></div>
+                    <div class="text-center mb-4">
+                        <h3 class="font-display text-xl font-bold">&#128275; Unlock Your Full Reading</h3>
+                        <p class="text-gray-400 text-sm mt-1">Enter your email to receive your personalized cosmic report</p>
+                    </div>
+                    <div class="space-y-3">
+                        <input id="email-input" type="email" placeholder="your@email.com"
+                            class="w-full px-5 py-4 bg-gray-800/80 border border-gray-700 rounded-2xl text-white placeholder-gray-500 text-center text-lg transition-all">
+                        <button onclick="submitEmail()" class="cta-btn w-full py-4 bg-gradient-to-r from-cosmic-600 via-purple-600 to-cosmic-600 rounded-2xl font-bold text-lg transition-all relative overflow-hidden">
+                            <span class="relative z-10">Reveal My Reading &#10024;</span>
+                        </button>
+                        <div class="flex items-center justify-center gap-3 text-gray-600 text-xs pt-1">
+                            <span>&#128274; 256-bit encrypted</span>
+                            <span>&bull;</span>
+                            <span>No spam, ever</span>
+                            <span>&bull;</span>
+                            <span>Unsubscribe anytime</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== PAGE 4: PLANS ==================== -->
+<div id="page-plans" class="page">
+    <div class="relative z-10 min-h-screen py-10 px-4">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-4 fade-up">
+                <div class="inline-flex items-center gap-2 px-4 py-2 glass rounded-full mb-4 text-sm">
+                    <span class="w-2 h-2 bg-red-400 rounded-full animate-pulse"></span>
+                    <span class="text-gray-300">Offer expires in <span id="countdown" class="text-white font-bold">14:59</span></span>
+                </div>
+                <h2 class="font-display text-3xl sm:text-4xl font-black mb-3">Choose Your Cosmic Journey</h2>
+                <p class="text-gray-400 text-lg font-elegant">Unlock unlimited access to all readings & video guidance</p>
+            </div>
+
+            <!-- Savings badge -->
+            <div class="text-center mb-8 fade-up-d1">
+                <span class="inline-block px-4 py-1.5 bg-green-500/10 border border-green-500/30 rounded-full text-green-400 text-sm font-medium">
+                    &#127881; Launch Special: Save up to 60%
+                </span>
+            </div>
+
+            <!-- Plan Cards -->
+            <div class="grid md:grid-cols-3 gap-5 mb-10">
+                <!-- Starter -->
+                <div class="plan-card glass rounded-3xl p-7 fade-up-d1 cursor-pointer" onclick="selectPlan('starter')">
+                    <div class="text-gray-400 text-sm font-semibold tracking-wider mb-4">STARTER</div>
+                    <div class="flex items-baseline gap-1 mb-1">
+                        <span class="font-display text-4xl font-black">&#8377;499</span>
+                    </div>
+                    <div class="text-gray-600 text-sm line-through mb-6">&#8377;1,499</div>
+                    <ul class="space-y-3 text-sm mb-8">
+                        <li class="flex items-center gap-3 text-gray-300"><span class="w-5 h-5 rounded-full bg-cosmic-600/20 flex items-center justify-center text-cosmic-400 text-xs flex-shrink-0">&#10003;</span> Full cosmic reading report</li>
+                        <li class="flex items-center gap-3 text-gray-300"><span class="w-5 h-5 rounded-full bg-cosmic-600/20 flex items-center justify-center text-cosmic-400 text-xs flex-shrink-0">&#10003;</span> 10 video lessons</li>
+                        <li class="flex items-center gap-3 text-gray-300"><span class="w-5 h-5 rounded-full bg-cosmic-600/20 flex items-center justify-center text-cosmic-400 text-xs flex-shrink-0">&#10003;</span> Email support</li>
+                        <li class="flex items-center gap-3 text-gray-600"><span class="w-5 h-5 rounded-full bg-gray-800 flex items-center justify-center text-gray-600 text-xs flex-shrink-0">&#10007;</span> Live sessions</li>
+                        <li class="flex items-center gap-3 text-gray-600"><span class="w-5 h-5 rounded-full bg-gray-800 flex items-center justify-center text-gray-600 text-xs flex-shrink-0">&#10007;</span> 1:1 consultation</li>
+                    </ul>
+                    <button class="w-full py-3.5 border border-gray-700 hover:border-cosmic-500 rounded-2xl font-semibold text-gray-300 hover:text-white transition-all">
+                        Get Started
+                    </button>
+                </div>
+
+                <!-- Premium (Popular) -->
+                <div class="plan-card plan-popular rounded-3xl p-7 fade-up-d2 cursor-pointer relative" onclick="selectPlan('premium')">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-5 py-1.5 bg-gradient-to-r from-cosmic-600 to-purple-600 rounded-full text-xs font-bold shadow-lg shadow-cosmic-600/30 whitespace-nowrap">
+                        &#11088; MOST POPULAR
+                    </div>
+                    <div class="text-cosmic-400 text-sm font-semibold tracking-wider mb-4 mt-1">PREMIUM</div>
+                    <div class="flex items-baseline gap-1 mb-1">
+                        <span class="font-display text-4xl font-black text-shimmer">&#8377;999</span>
+                    </div>
+                    <div class="text-gray-600 text-sm line-through mb-6">&#8377;2,999</div>
+                    <ul class="space-y-3 text-sm mb-8">
+                        <li class="flex items-center gap-3 text-gray-200"><span class="w-5 h-5 rounded-full bg-cosmic-600/30 flex items-center justify-center text-cosmic-300 text-xs flex-shrink-0">&#10003;</span> Full cosmic reading report</li>
+                        <li class="flex items-center gap-3 text-gray-200"><span class="w-5 h-5 rounded-full bg-cosmic-600/30 flex items-center justify-center text-cosmic-300 text-xs flex-shrink-0">&#10003;</span> <strong>All 30</strong> video lessons</li>
+                        <li class="flex items-center gap-3 text-gray-200"><span class="w-5 h-5 rounded-full bg-cosmic-600/30 flex items-center justify-center text-cosmic-300 text-xs flex-shrink-0">&#10003;</span> Priority support</li>
+                        <li class="flex items-center gap-3 text-gray-200"><span class="w-5 h-5 rounded-full bg-cosmic-600/30 flex items-center justify-center text-cosmic-300 text-xs flex-shrink-0">&#10003;</span> 2 live sessions/month</li>
+                        <li class="flex items-center gap-3 text-gray-600"><span class="w-5 h-5 rounded-full bg-gray-800 flex items-center justify-center text-gray-600 text-xs flex-shrink-0">&#10007;</span> 1:1 consultation</li>
+                    </ul>
+                    <button class="cta-btn w-full py-3.5 bg-gradient-to-r from-cosmic-600 to-purple-600 rounded-2xl font-bold relative overflow-hidden">
+                        <span class="relative z-10">Get Premium Access</span>
+                    </button>
+                    <p class="text-center text-cosmic-400/60 text-xs mt-3">Chosen by 73% of users</p>
+                </div>
+
+                <!-- VIP -->
+                <div class="plan-card glass rounded-3xl p-7 fade-up-d3 cursor-pointer relative overflow-hidden" onclick="selectPlan('vip')">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-gold-400/10 to-transparent"></div>
+                    <div class="text-gold-400 text-sm font-semibold tracking-wider mb-4">VIP &#128081;</div>
+                    <div class="flex items-baseline gap-1 mb-1">
+                        <span class="font-display text-4xl font-black text-gold-shimmer">&#8377;1,999</span>
+                    </div>
+                    <div class="text-gray-600 text-sm line-through mb-6">&#8377;4,999</div>
+                    <ul class="space-y-3 text-sm mb-8">
+                        <li class="flex items-center gap-3 text-gray-200"><span class="w-5 h-5 rounded-full bg-gold-400/20 flex items-center justify-center text-gold-400 text-xs flex-shrink-0">&#10003;</span> Full cosmic reading report</li>
+                        <li class="flex items-center gap-3 text-gray-200"><span class="w-5 h-5 rounded-full bg-gold-400/20 flex items-center justify-center text-gold-400 text-xs flex-shrink-0">&#10003;</span> <strong>All 30</strong> video lessons</li>
+                        <li class="flex items-center gap-3 text-gray-200"><span class="w-5 h-5 rounded-full bg-gold-400/20 flex items-center justify-center text-gold-400 text-xs flex-shrink-0">&#10003;</span> VIP priority support</li>
+                        <li class="flex items-center gap-3 text-gray-200"><span class="w-5 h-5 rounded-full bg-gold-400/20 flex items-center justify-center text-gold-400 text-xs flex-shrink-0">&#10003;</span> <strong>Unlimited</strong> live sessions</li>
+                        <li class="flex items-center gap-3 text-gray-200"><span class="w-5 h-5 rounded-full bg-gold-400/20 flex items-center justify-center text-gold-400 text-xs flex-shrink-0">&#10003;</span> <strong>1:1</strong> personal consultation</li>
+                    </ul>
+                    <button class="w-full py-3.5 border border-gold-400/50 hover:border-gold-400 rounded-2xl font-bold text-gold-400 hover:bg-gold-400/10 transition-all">
+                        Go VIP
+                    </button>
+                </div>
+            </div>
+
+            <!-- Trust -->
+            <div class="flex flex-wrap justify-center items-center gap-6 text-gray-500 text-sm fade-up-d4">
+                <span class="flex items-center gap-1.5">&#128274; Secure 256-bit SSL</span>
+                <span class="flex items-center gap-1.5">&#9889; Instant Access</span>
+                <span class="flex items-center gap-1.5">&#128176; 7-day Money Back</span>
+                <span class="flex items-center gap-1.5">&#128241; Access on Any Device</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== PAGE 5: ACCOUNT SETUP ==================== -->
+<div id="page-account" class="page">
+    <div class="relative z-10 min-h-screen flex items-center justify-center px-4 py-10">
+        <div class="w-full max-w-md">
+            <!-- Confetti will be spawned here -->
+            <div class="text-center mb-8 fade-up">
+                <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-3xl shadow-lg shadow-green-500/30 scale-in">
+                    &#10003;
+                </div>
+                <h2 class="font-display text-3xl font-black mb-2">Payment Successful!</h2>
+                <p class="text-gray-400">Set up your account to start your journey</p>
+            </div>
+
+            <div class="glass-strong rounded-3xl p-8 fade-up-d1">
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2 font-medium">Email Address</label>
+                        <input type="email" value="user@example.com" disabled
+                            class="w-full px-5 py-3.5 bg-gray-800/50 border border-gray-700 rounded-2xl text-gray-400">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2 font-medium">Create Password</label>
+                        <input id="pw" type="password" placeholder="Min 8 characters"
+                            class="w-full px-5 py-3.5 bg-gray-800/80 border border-gray-700 rounded-2xl text-white placeholder-gray-500 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2 font-medium">Confirm Password</label>
+                        <input type="password" placeholder="Re-enter password"
+                            class="w-full px-5 py-3.5 bg-gray-800/80 border border-gray-700 rounded-2xl text-white placeholder-gray-500 transition-all">
+                    </div>
+                    <button onclick="navigateTo('page-dashboard')" class="cta-btn w-full py-4 bg-gradient-to-r from-cosmic-600 via-purple-600 to-cosmic-600 rounded-2xl font-bold text-lg mt-2 relative overflow-hidden">
+                        <span class="relative z-10">Enter Your Dashboard &#10142;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== PAGE 6: DASHBOARD ==================== -->
+<div id="page-dashboard" class="page">
+    <div class="relative z-10 min-h-screen">
+        <!-- Nav -->
+        <nav class="border-b border-gray-800/80 bg-gray-950/60 backdrop-blur-xl sticky top-0 z-50">
+            <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cosmic-500 to-purple-600 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                    </div>
+                    <span class="font-display text-lg font-bold">AstroVeda</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-gray-400 hidden sm:block">user@example.com</span>
+                    <div class="relative group">
+                        <button class="w-10 h-10 rounded-full bg-gradient-to-br from-cosmic-500 to-purple-600 flex items-center justify-center font-bold text-sm shadow-lg shadow-cosmic-600/20">U</button>
+                        <div class="absolute right-0 mt-2 w-52 glass-strong rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden">
+                            <div class="p-3 border-b border-gray-800">
+                                <div class="font-semibold text-sm">Premium Member</div>
+                                <div class="text-xs text-gray-400">user@example.com</div>
+                            </div>
+                            <a href="#" class="block px-4 py-3 text-sm text-gray-300 hover:bg-white/5 transition-all">&#128100; My Profile</a>
+                            <a href="#" class="block px-4 py-3 text-sm text-gray-300 hover:bg-white/5 transition-all">&#128274; Reset Password</a>
+                            <a href="#" onclick="navigateTo('page-landing');return false" class="block px-4 py-3 text-sm text-red-400 hover:bg-white/5 transition-all">&#128682; Log Out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="max-w-6xl mx-auto px-6 py-8">
+            <!-- Welcome -->
+            <div class="relative overflow-hidden rounded-3xl p-8 mb-8 fade-up" style="background: linear-gradient(135deg, rgba(139,61,255,0.2) 0%, rgba(88,28,135,0.15) 50%, rgba(15,15,30,0.9) 100%); border: 1px solid rgba(139,61,255,0.2);">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-cosmic-600/10 rounded-full blur-3xl"></div>
+                <div class="relative">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h1 class="font-display text-3xl font-black mb-2">Welcome to Your Cosmic Journey &#10024;</h1>
+                            <p class="text-gray-400 text-lg">Your personalized path to cosmic understanding</p>
+                        </div>
+                        <div class="px-4 py-2 bg-cosmic-600/20 border border-cosmic-500/30 rounded-xl text-cosmic-300 text-sm font-semibold whitespace-nowrap">
+                            &#128081; Premium Member
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="glass rounded-2xl p-5 text-center fade-up-d1">
+                    <div class="text-3xl mb-2">&#128293;</div>
+                    <div class="text-xl font-bold text-orange-400">94%</div>
+                    <div class="text-xs text-gray-400 mt-1">Life Path Energy</div>
+                </div>
+                <div class="glass rounded-2xl p-5 text-center fade-up-d1">
+                    <div class="text-3xl mb-2">&#128150;</div>
+                    <div class="text-xl font-bold text-pink-400">87%</div>
+                    <div class="text-xs text-gray-400 mt-1">Love Compatibility</div>
+                </div>
+                <div class="glass rounded-2xl p-5 text-center fade-up-d2">
+                    <div class="text-3xl mb-2">&#128188;</div>
+                    <div class="text-xl font-bold text-blue-400">91%</div>
+                    <div class="text-xs text-gray-400 mt-1">Career Alignment</div>
+                </div>
+                <div class="glass rounded-2xl p-5 text-center fade-up-d2">
+                    <div class="text-3xl mb-2">&#9889;</div>
+                    <div class="text-xl font-bold text-purple-400">96%</div>
+                    <div class="text-xs text-gray-400 mt-1">Spiritual Growth</div>
+                </div>
+            </div>
+
+            <!-- Cosmic Profile -->
+            <div class="glass rounded-3xl p-7 mb-8 fade-up-d2">
+                <h2 class="font-display text-xl font-bold mb-5 flex items-center gap-2">&#128302; Your Cosmic Profile</h2>
+                <div class="grid md:grid-cols-3 gap-5">
+                    <div class="bg-gradient-to-br from-orange-500/10 to-transparent rounded-2xl p-5 border border-orange-500/10">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center">&#128293;</div>
+                            <div class="font-semibold">Life Path</div>
+                        </div>
+                        <div class="text-orange-400 font-bold text-lg mb-1">Strong Fire Energy</div>
+                        <p class="text-gray-400 text-sm">Natural leadership qualities with intense creative drive and passion.</p>
+                        <div class="mt-3 h-2 bg-gray-800 rounded-full overflow-hidden"><div class="h-full w-[94%] bg-gradient-to-r from-orange-500 to-red-500 rounded-full"></div></div>
+                    </div>
+                    <div class="bg-gradient-to-br from-pink-500/10 to-transparent rounded-2xl p-5 border border-pink-500/10">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center">&#128150;</div>
+                            <div class="font-semibold">Love & Compatibility</div>
+                        </div>
+                        <div class="text-pink-400 font-bold text-lg mb-1">Earth Signs Match</div>
+                        <p class="text-gray-400 text-sm">Deepest connections with Taurus, Virgo, and Capricorn energies.</p>
+                        <div class="mt-3 h-2 bg-gray-800 rounded-full overflow-hidden"><div class="h-full w-[87%] bg-gradient-to-r from-pink-500 to-rose-500 rounded-full"></div></div>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-500/10 to-transparent rounded-2xl p-5 border border-blue-500/10">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cosmic-500 to-blue-500 flex items-center justify-center">&#128188;</div>
+                            <div class="font-semibold">Career Destiny</div>
+                        </div>
+                        <div class="text-blue-400 font-bold text-lg mb-1">Creative Leadership</div>
+                        <p class="text-gray-400 text-sm">Your stars align with entrepreneurship and creative direction roles.</p>
+                        <div class="mt-3 h-2 bg-gray-800 rounded-full overflow-hidden"><div class="h-full w-[91%] bg-gradient-to-r from-cosmic-500 to-blue-500 rounded-full"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Library -->
+            <div class="mb-10">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+                    <h2 class="font-display text-xl font-bold flex items-center gap-2">&#127909; Video Lessons <span class="text-sm font-normal text-gray-500">(30 videos)</span></h2>
+                    <div class="flex gap-2">
+                        <button class="px-4 py-2 bg-cosmic-600 text-white rounded-xl text-sm font-medium shadow-lg shadow-cosmic-600/20">All</button>
+                        <button class="px-4 py-2 glass text-gray-400 rounded-xl text-sm hover:text-white transition-all">Beginner</button>
+                        <button class="px-4 py-2 glass text-gray-400 rounded-xl text-sm hover:text-white transition-all">Advanced</button>
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="video-grid"></div>
+            </div>
+
+            <div class="text-center pb-10">
+                <button class="px-8 py-3 glass hover:bg-white/10 rounded-2xl text-sm font-medium transition-all text-gray-300">
+                    Load More Videos &#8595;
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== VIDEO PLAYER MODAL ==================== -->
+<div id="video-modal" class="fixed inset-0 z-[100] hidden">
+    <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeVideo()"></div>
+    <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
+        <div class="w-full max-w-3xl glass-strong rounded-3xl overflow-hidden scale-in">
+            <div class="aspect-video bg-gradient-to-br from-cosmic-900 to-gray-900 flex items-center justify-center relative">
+                <div class="text-center">
+                    <div class="w-20 h-20 rounded-full bg-white/10 backdrop-blur flex items-center justify-center mx-auto mb-3 glow-pulse">
+                        <svg class="w-10 h-10 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                    <p class="text-gray-400 text-sm">Video Player</p>
+                </div>
+                <button onclick="closeVideo()" class="absolute top-4 right-4 w-10 h-10 rounded-full glass flex items-center justify-center text-white hover:bg-white/20 transition-all text-lg">&times;</button>
+            </div>
+            <div class="p-5">
+                <h3 id="modal-title" class="font-display font-bold text-lg mb-1">Video Title</h3>
+                <p class="text-gray-400 text-sm">Duration: 12:34 &bull; HD Quality</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+// ===== STAR CANVAS =====
+const canvas = document.getElementById('star-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function initCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    stars = Array.from({length: 200}, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5 + 0.3,
+        a: Math.random(),
+        da: (Math.random() - 0.5) * 0.01,
+        dx: (Math.random() - 0.5) * 0.1,
+    }));
+}
+
+function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+        s.a += s.da;
+        s.x += s.dx;
+        if (s.a > 1 || s.a < 0.1) s.da *= -1;
+        if (s.x > canvas.width) s.x = 0;
+        if (s.x < 0) s.x = canvas.width;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(200,180,255,${s.a})`;
+        ctx.fill();
+    });
+    requestAnimationFrame(drawStars);
+}
+
+initCanvas(); drawStars();
+window.addEventListener('resize', initCanvas);
+
+// ===== LIVE COUNTER =====
+setInterval(() => {
+    const el = document.getElementById('live-count');
+    const n = parseInt(el.textContent.replace(',', '')) + Math.floor(Math.random()*5) - 2;
+    el.textContent = Math.max(2500, n).toLocaleString();
+}, 4000);
+
+// ===== PAGE NAVIGATION =====
+function navigateTo(pageId) {
+    const current = document.querySelector('.page.active');
+    if (current) {
+        current.style.opacity = '0';
+        setTimeout(() => {
+            current.classList.remove('active');
+            const next = document.getElementById(pageId);
+            next.classList.add('active');
+            setTimeout(() => { next.style.opacity = '1'; }, 20);
+            window.scrollTo({top: 0, behavior: 'smooth'});
+
+            if (pageId === 'page-account') spawnConfetti();
+            if (pageId === 'page-dashboard') renderVideos();
+        }, 400);
+    }
+}
+
+// ===== QUIZ =====
+const questions = [
+    { q: "What time of day do you feel most energized?", icon: "&#9728;&#65039;", sub: "This reveals your dominant planetary ruler", opts: ["Early Morning (5-8 AM)", "Late Morning (9-12 PM)", "Afternoon (1-5 PM)", "Night (9 PM+)"] },
+    { q: "Which element do you feel most drawn to?", icon: "&#127754;", sub: "Elements shape your core personality traits", opts: ["Fire — Passion & Energy", "Earth — Stability & Growth", "Air — Freedom & Ideas", "Water — Emotion & Intuition"] },
+    { q: "What area of life do you seek clarity on?", icon: "&#128302;", sub: "This guides your personalized reading focus", opts: ["Love & Relationships", "Career & Finance", "Health & Wellness", "Spiritual Growth"] },
+    { q: "How do you typically make big decisions?", icon: "&#129300;", sub: "Decision style reflects your lunar influence", opts: ["Go with my gut feeling", "Analyze all the facts", "Seek advice from others", "Wait for a sign from the universe"] },
+    { q: "Which season were you born in?", icon: "&#127808;", sub: "Birth season reveals your elemental balance", opts: ["Winter (Dec - Feb)", "Spring (Mar - May)", "Summer (Jun - Aug)", "Autumn (Sep - Nov)"] }
+];
+let qIdx = 0;
+
+function renderQ() {
+    const q = questions[qIdx];
+    const pct = Math.round(((qIdx + 1) / questions.length) * 100);
+    document.getElementById('q-num').textContent = qIdx + 1;
+    document.getElementById('q-pct').textContent = pct + '%';
+    document.getElementById('progress-bar').style.width = pct + '%';
+
+    document.getElementById('quiz-container').innerHTML = `
+        <div class="text-center mb-10 fade-up">
+            <div class="text-5xl mb-4">${q.icon}</div>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold mb-2">${q.q}</h2>
+            <p class="text-gray-500 text-sm">${q.sub}</p>
+        </div>
+        <div class="space-y-3">
+            ${q.opts.map((o, i) => `
+                <div class="option-card glass rounded-2xl p-5 cursor-pointer fade-up" style="animation-delay:${i*0.08}s" onclick="pickOpt(this)">
+                    <div class="flex items-center gap-4">
+                        <div class="option-circle w-10 h-10 rounded-full border-2 border-gray-600 flex items-center justify-center text-sm font-semibold text-gray-400 flex-shrink-0 transition-all duration-300">
+                            ${String.fromCharCode(65+i)}
+                        </div>
+                        <span class="font-medium text-gray-200">${o}</span>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function pickOpt(el) {
+    el.classList.add('selected');
+    el.querySelector('.option-circle').innerHTML = '&#10003;';
+    document.querySelectorAll('.option-card').forEach(c => { if(c!==el) c.style.pointerEvents='none'; c.style.opacity = c===el?'1':'0.4'; });
+
+    setTimeout(() => {
+        qIdx++;
+        if (qIdx < questions.length) { renderQ(); }
+        else { navigateTo('page-email'); startAnalysis(); }
+    }, 700);
+}
+
+// ===== ANALYSIS ANIMATION =====
+function startAnalysis() {
+    const texts = ["Mapping your birth chart alignment...", "Calculating planetary positions...", "Analyzing elemental balance...", "Generating your cosmic profile..."];
+    let i = 0;
+    const interval = setInterval(() => {
+        i++;
+        if (i < texts.length) {
+            document.getElementById('analyze-text').textContent = texts[i];
+        } else {
+            clearInterval(interval);
+            document.getElementById('analyzing').classList.add('hidden');
+            document.getElementById('results-preview').classList.remove('hidden');
+            setTimeout(() => document.getElementById('email-popup').classList.remove('hidden'), 600);
+        }
+    }, 1200);
+}
+
+// ===== EMAIL =====
+function submitEmail() {
+    const v = document.getElementById('email-input').value;
+    if (!v || !v.includes('@')) {
+        document.getElementById('email-input').style.borderColor = '#ef4444';
+        document.getElementById('email-input').classList.add('animate-[shake_0.3s_ease]');
+        return;
+    }
+    navigateTo('page-plans');
+    startCountdown();
+}
+
+// ===== COUNTDOWN =====
+function startCountdown() {
+    let s = 899;
+    const el = document.getElementById('countdown');
+    setInterval(() => {
+        s--;
+        if (s < 0) s = 0;
+        const m = Math.floor(s/60), sec = s%60;
+        el.textContent = `${m}:${sec.toString().padStart(2,'0')}`;
+    }, 1000);
+}
+
+// ===== PLAN =====
+function selectPlan(p) { navigateTo('page-account'); }
+
+// ===== CONFETTI =====
+function spawnConfetti() {
+    const colors = ['#8b3dff','#a855f7','#facc15','#ec4899','#06b6d4','#22c55e'];
+    for (let i=0; i<60; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.cssText = `
+            left:${Math.random()*100}vw; top:-10px;
+            background:${colors[Math.floor(Math.random()*colors.length)]};
+            border-radius:${Math.random()>0.5?'50%':'2px'};
+            width:${Math.random()*8+4}px; height:${Math.random()*8+4}px;
+            animation-delay:${Math.random()*2}s;
+            animation-duration:${Math.random()*2+2}s;
+        `;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 5000);
+    }
+}
+
+// ===== VIDEOS =====
+const vids = [
+    {t:"Understanding Your Birth Chart", d:"15:23", tag:"Beginner", g:"from-violet-600 to-purple-600", icon:"&#128302;"},
+    {t:"The 12 Houses Explained", d:"22:10", tag:"Beginner", g:"from-blue-600 to-indigo-600", icon:"&#127968;"},
+    {t:"Moon Sign & Your Emotions", d:"18:45", tag:"Beginner", g:"from-cyan-600 to-blue-600", icon:"&#127769;"},
+    {t:"Venus & Love Compatibility", d:"20:30", tag:"Beginner", g:"from-pink-600 to-rose-600", icon:"&#128150;"},
+    {t:"Mercury Retrograde Survival", d:"12:15", tag:"Advanced", g:"from-amber-600 to-orange-600", icon:"&#9889;"},
+    {t:"Saturn Return: Life's Ultimate Test", d:"25:00", tag:"Advanced", g:"from-slate-600 to-gray-600", icon:"&#128296;"},
+    {t:"Daily Rituals by Zodiac Sign", d:"16:40", tag:"Beginner", g:"from-green-600 to-emerald-600", icon:"&#127807;"},
+    {t:"Palmistry: Reading Your Life Lines", d:"19:55", tag:"Advanced", g:"from-cosmic-600 to-violet-600", icon:"&#9995;"},
+    {t:"Numerology & The Power of Names", d:"14:20", tag:"Beginner", g:"from-fuchsia-600 to-pink-600", icon:"&#128290;"},
+];
+
+function renderVideos() {
+    document.getElementById('video-grid').innerHTML = vids.map((v,i) => `
+        <div class="video-card glass rounded-2xl overflow-hidden cursor-pointer fade-up" style="animation-delay:${i*0.06}s" onclick="openVideo('${v.t}')">
+            <div class="aspect-video bg-gradient-to-br ${v.g} relative flex items-center justify-center group">
+                <div class="video-overlay absolute inset-0 bg-black opacity-20 transition-opacity"></div>
+                <div class="absolute top-3 left-3 px-2.5 py-1 glass rounded-lg text-xs font-medium">${v.tag}</div>
+                <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur rounded-lg text-xs">${v.d}</div>
+                <div class="play-btn w-16 h-16 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center transition-all relative z-10">
+                    <svg class="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <div class="absolute top-3 right-3 text-2xl">${v.icon}</div>
+            </div>
+            <div class="p-4">
+                <h3 class="font-semibold text-sm mb-1">${v.t}</h3>
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-500 text-xs">Lesson ${i+1}</span>
+                    <div class="h-1 w-16 bg-gray-800 rounded-full overflow-hidden"><div class="h-full bg-cosmic-500 rounded-full" style="width:${i===0?'65':i===1?'30':'0'}%"></div></div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function openVideo(t) {
+    document.getElementById('modal-title').textContent = t;
+    document.getElementById('video-modal').classList.remove('hidden');
+}
+function closeVideo() { document.getElementById('video-modal').classList.add('hidden'); }
+
+// Init quiz on navigate
+document.addEventListener('DOMContentLoaded', () => { renderQ(); });
+</script>
+</body>
+</html>
